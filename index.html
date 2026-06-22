@@ -3,32 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><수꺾마> 세로셈 원리 인포그래픽 포스터</title>
-    
-    <!-- 1. Tailwind CSS 로드 -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    
-    <!-- 2. React 및 ReactDOM 로드 -->
-    <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
-    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
-    
-    <!-- 3. 실시간 Babel 컴파일러 로드 -->
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-
-    <!-- 4. 애니메이션 및 폰트 스타일 추가 -->
+    <title>수꺾마 세로셈 원리 인포그래픽 포스터</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&family=Share+Tech+Mono&display=swap');
-        body {
-            font-family: 'Noto Sans KR', sans-serif;
-        }
-        .font-mono-custom {
-            font-family: 'Share Tech Mono', monospace;
-        }
+        @import url('https://fonts.googleapis.com/css2?family=Pretendard:wght@400;600;800&display=swap');
+        body { font-family: 'Pretendard', sans-serif; }
     </style>
+    <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 </head>
-<body class="bg-slate-900 text-white min-h-screen flex flex-col justify-between">
+<body class="bg-slate-950 text-white antialiased">
 
-    <!-- React가 렌더링될 루트 엘리먼트 -->
     <div id="root"></div>
 
     <script type="text/babel">
@@ -37,297 +23,200 @@
         function App() {
             const [num1, setNum1] = useState(28);
             const [num2, setNum2] = useState(15);
-            const [step, setStep] = useState(0); // 0: 준비, 1: 일의자리 합, 2: 받아올림, 3: 완성
+            const [step, setStep] = useState(2); // 기본 단계를 '2. 받아올림'으로 설정
 
-            // 계산 중간값들
             const ones1 = num1 % 10;
             const tens1 = Math.floor(num1 / 10);
             const ones2 = num2 % 10;
             const tens2 = Math.floor(num2 / 10);
 
             const sumOnes = ones1 + ones2;
-            const carry = sumOnes >= 10 ? 1 : 0;
             const displayOnes = sumOnes % 10;
+            const carry = sumOnes >= 10 ? 1 : 0;
             const sumTens = tens1 + tens2 + carry;
 
             const presets = [
-                { n1: 28, n2: 15, label: '🍎 사과 문제 (28 + 15)' },
-                { n1: 37, n2: 26, label: '⭐ 도전 문제 (37 + 26)' },
-                { n1: 49, n2: 34, label: '🏆 마스터 문제 (49 + 34)' },
+                { n1: 28, n2: 15, label: '🍎 사과 (28 + 15)' },
+                { n1: 37, n2: 26, label: '⭐ 도전 (37 + 26)' },
+                { n1: 49, n2: 34, label: '🏆 마스터 (49 + 34)' }
             ];
 
-            const handlePreset = (n1, n2) => {
-                setNum1(n1);
-                setNum2(n2);
-                setStep(0);
-            };
-
             return (
-                <div className="min-h-screen bg-slate-900 text-white font-sans p-4 md:p-6 flex flex-col justify-between">
+                <div className="min-h-screen bg-slate-950 text-slate-100 p-4 md:p-8 flex flex-col items-center justify-start gap-6">
                     
-                    {/* 1. 포스터 헤더 */}
-                    <header className="text-center mb-4">
-                        <div className="inline-block bg-amber-500/15 text-amber-400 text-xs font-bold px-4 py-1.5 rounded-full border border-amber-500/30 mb-2.5 shadow-md shadow-slate-950/40">
-                            🎒 수꺾마 | 2제 2해되는 2학년 수학
-                        </div>
-                        <h1 className="text-2xl md:text-4xl font-extrabold text-slate-100 tracking-tight leading-tight">
-                            한눈에 보는 <span className="text-indigo-400">받아올림 세로셈</span> 원리 포스터
-                        </h1>
-                        <p className="text-slate-400 text-xs md:text-sm mt-2 max-w-xl mx-auto leading-relaxed">
-                            일의 자리 낱개 모형 10개가 십 모형 1개로 변신해 앞집으로 슝~ 올라가는 신비한 비밀!
-                        </p>
-                    </header>
+                    {/* 상단 통합 연산판 상자 */}
+                    <div className="w-full max-w-5xl bg-slate-900/40 border border-slate-800/80 rounded-2xl p-4 flex justify-between items-center px-6">
+                        <span className="text-sm font-bold text-slate-400">실시간 연동 연산판</span>
+                        <span className="text-xl font-black font-mono text-indigo-400">{num1} + {num2} = <span className="text-emerald-400">{num1 + num2}</span></span>
+                    </div>
 
-                    {/* 2. 메인 콘텐츠 그리드 (1페이지 집중 레이아웃) */}
-                    <main className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-stretch my-auto max-w-6xl mx-auto w-full">
+                    {/* 메인 2분할 콘텐츠 보드 */}
+                    <main className="w-full max-w-5xl grid grid-cols-1 md:grid-cols-2 gap-6 items-stretch">
                         
-                        {/* 왼쪽: 수 모형의 비밀 규칙 및 문제 바꾸기 (4 cols) */}
-                        <div className="lg:col-span-4 flex flex-col gap-4">
+                        {/* 왼쪽: 입체 수 모형 보드 */}
+                        <div className="bg-slate-900/50 border border-slate-800 rounded-3xl p-6 flex flex-col justify-between min-h-[380px]">
+                            <h2 className="text-sm font-bold text-slate-300 flex items-center gap-2 mb-4">
+                                📦 입체 수 모형 보드
+                            </h2>
                             
-                            {/* 변신 공식 카드 */}
-                            <div className="bg-slate-800/80 rounded-2xl p-5 border border-slate-700/60 relative overflow-hidden flex-1 flex flex-col justify-center shadow-lg">
-                                <h3 className="text-sm md:text-base font-bold text-amber-400 flex items-center gap-2 mb-3">
-                                    <span>💡</span> 수 모형 변신 공식
-                                </h3>
-                                
-                                <div className="bg-slate-950/80 rounded-xl p-4 border border-slate-800/80 flex flex-col items-center justify-center gap-4 py-6">
-                                    <div className="flex items-center gap-3">
-                                        {/* 일 모형 10개 */}
-                                        <div className="grid grid-cols-5 gap-1 p-2 bg-yellow-500/10 rounded-lg border border-yellow-500/20">
-                                            {[...Array(10)].map((_, i) => (
-                                                <div key={i} className="w-3.5 h-3.5 bg-yellow-400 rounded-[3px] shadow-sm border border-yellow-500 animate-pulse"></div>
-                                            ))}
-                                        </div>
-                                        
-                                        <span className="text-xl font-black text-indigo-400">→</span>
-                                        
-                                        {/* 십 모형 1개 */}
-                                        <div className="flex flex-col gap-0.5 p-1 bg-indigo-500/10 rounded-md border border-indigo-500/20">
-                                            <div className="w-4 h-12 bg-indigo-500 rounded-sm flex flex-col justify-between p-0.5 border border-indigo-600 shadow-sm">
-                                                {[...Array(10)].map((_, i) => (
-                                                    <div key={i} className="w-full h-[2.5px] bg-indigo-300 rounded-[1px]"></div>
-                                                ))}
-                                            </div>
-                                        </div>
+                            <div className="grid grid-cols-2 gap-4 bg-slate-950/60 border border-slate-900 rounded-2xl p-6 flex-grow items-start text-center relative">
+                                {/* 십의 자리 모형 구역 */}
+                                <div className="border-r border-slate-800/60 h-full pr-2">
+                                    <span className="inline-block bg-indigo-950 text-indigo-400 text-xs font-bold px-2.5 py-1 rounded-md mb-4">
+                                        십의 자리 ({step === 3 ? sumTens : tens1 + tens2})
+                                    </span>
+                                    <div className="flex justify-center gap-1.5 pt-2">
+                                        {/* 기존 십 모형들 */}
+                                        {[...Array(tens1 + tens2)].map((_, i) => (
+                                            <div key={i} className="w-3 h-20 bg-indigo-600 rounded-sm border border-indigo-400/30 shadow-md shadow-indigo-600/20" />
+                                        ))}
+                                        {/* 받아올림으로 새로 이사 온 십 모형 */}
+                                        {step >= 2 && carry === 1 && (
+                                            <div className="w-3 h-20 bg-amber-500 rounded-sm border border-amber-300/50 shadow-md shadow-amber-500/40 animate-pulse" />
+                                        )}
                                     </div>
-                                    <p className="text-xs text-center leading-relaxed text-slate-300 font-medium">
-                                        낱개 일 모형이 <span className="text-yellow-400 font-bold">10개</span> 모이면,<br/>
-                                        길쭉한 십 모형 <span className="text-indigo-400 font-bold">1개</span>로 바뀌어 올라가요!
-                                    </p>
+                                </div>
+
+                                {/* 일의 자리 모형 구역 */}
+                                <div>
+                                    <span className="inline-block bg-yellow-950 text-yellow-400 text-xs font-bold px-2.5 py-1 rounded-md mb-4">
+                                        일의 자리 ({step >= 1 ? displayOnes : sumOnes})
+                                    </span>
+                                    <div className="flex flex-wrap justify-center gap-1.5 max-w-[140px] mx-auto pt-4">
+                                        {step >= 1 ? (
+                                            // 일의 자리 계산 이후 남은 낱개 모형
+                                            [...Array(displayOnes)].map((_, i) => (
+                                                <div key={i} className="w-4 h-4 bg-yellow-400 rounded-sm border border-yellow-200/30" />
+                                            ))
+                                        ) : (
+                                            // 낱개 모형 전체 합친 상태
+                                            [...Array(sumOnes)].map((_, i) => (
+                                                <div key={i} className="w-4 h-4 bg-yellow-400 rounded-sm border border-yellow-200/30" />
+                                            ))
+                                        )}
+                                    </div>
                                 </div>
                             </div>
 
-                            {/* 실시간 프리셋 선택 */}
-                            <div className="bg-slate-800/80 rounded-2xl p-5 border border-slate-700/60 shadow-lg">
-                                <h3 className="text-sm md:text-base font-bold text-emerald-400 flex items-center gap-2 mb-3">
-                                    <span>🎮</span> 실시간 문제 바꾸기
-                                </h3>
-                                <div className="grid grid-cols-1 gap-2">
-                                    {presets.map((preset, idx) => (
-                                        <button
-                                            key={idx}
-                                            onClick={() => handlePreset(preset.n1, preset.n2)}
-                                            className={`text-left px-4 py-3 rounded-xl border text-xs font-bold transition-all ${
-                                                num1 === preset.n1 && num2 === preset.n2
-                                                    ? 'bg-indigo-600/30 border-indigo-500 text-indigo-300 shadow-lg scale-[1.02]'
-                                                    : 'bg-slate-950/60 border-slate-850 text-slate-400 hover:bg-slate-800 hover:text-slate-200'
-                                            }`}
-                                        >
-                                            {preset.label}
-                                        </button>
-                                    ))}
-                                </div>
+                            <div className="flex gap-2 text-[11px] text-slate-500 justify-center mt-3">
+                                <div className="flex items-center gap-1"><div className="w-2 h-2 bg-indigo-600 rounded-sm"/> 십 모형 (10)</div>
+                                <div className="flex items-center gap-1"><div className="w-2 h-2 bg-yellow-400 rounded-sm"/> 일 모형 (1)</div>
                             </div>
-
                         </div>
 
-                        {/* 오른쪽: 세로셈 & 수모형 연동 시뮬레이터 (8 cols) */}
-                        <div className="lg:col-span-8 bg-slate-800/40 rounded-3xl p-5 md:p-6 border border-slate-700/60 flex flex-col gap-4 shadow-xl backdrop-blur-sm">
-                            
-                            {/* 수식 요약 바 */}
-                            <div className="flex items-center justify-between bg-slate-950/50 px-4 py-3 rounded-xl border border-slate-800/80 shadow-inner">
-                                <span className="text-xs font-bold text-slate-400">실시간 연동 연산판</span>
-                                <div className="flex items-center gap-2 font-mono-custom font-extrabold text-sm md:text-base">
-                                    <span className="text-indigo-400">{num1}</span>
-                                    <span className="text-slate-500">+</span>
-                                    <span className="text-indigo-400">{num2}</span>
-                                    <span className="text-slate-500">=</span>
-                                    <span className="text-emerald-400">{num1 + num2}</span>
-                                </div>
-                            </div>
+                        {/* 오른쪽: 세로셈 실시간 판서 (격자 충돌 완벽 해결 버전) */}
+                        <div className="bg-slate-900/50 border border-slate-800 rounded-3xl p-6 flex flex-col justify-between min-h-[380px] items-center">
+                            <h3 className="text-sm font-bold text-slate-300 w-full text-left mb-4 flex items-center gap-2">
+                                🔟 세로셈 실시간 판서
+                            </h3>
 
-                            {/* 핵심 파트: 양방향 비교 카드 */}
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-5 items-stretch">
+                            {/* [핵심 패치]: grid-cols를 4열로 구성하여 1열은 오직 부호(+) 전용 방으로 격리 */}
+                            <div className="relative bg-slate-950 p-6 py-8 rounded-2xl border border-slate-800/80 w-full max-w-[260px] font-mono text-5xl font-black tracking-widest select-none flex justify-center shadow-inner">
                                 
-                                {/* 1. 수 모형 입체 보드 */}
-                                <div className="bg-slate-900/90 rounded-2xl p-4 border border-slate-800 flex flex-col justify-between shadow-lg">
-                                    <div>
-                                        <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">
-                                            📦 입체 수 모형 보드
-                                        </h4>
-                                        
-                                        <div className="grid grid-cols-2 gap-2 bg-slate-950/40 p-2.5 rounded-xl border border-slate-800/80 min-h-[220px]">
-                                            
-                                            {/* 십의 자리 수 모형 */}
-                                            <div className="border-r border-dashed border-slate-800 p-1.5 flex flex-col items-center">
-                                                <span className="text-[10px] md:text-xs font-bold text-indigo-400 bg-indigo-500/10 px-2.5 py-0.5 rounded-full mb-2">십의 자리 ({tens1 + tens2 + (step >= 2 ? carry : 0)})</span>
-                                                <div className="flex flex-wrap gap-1.5 justify-center">
-                                                    {/* 첫 번째 수 십 모형 */}
-                                                    {[...Array(tens1)].map((_, i) => (
-                                                        <div key={`t1-${i}`} className="w-3.5 h-12 bg-indigo-500 rounded-sm flex flex-col justify-between p-0.5 border border-indigo-600 shadow-sm">
-                                                            {[...Array(10)].map((_, j) => (
-                                                                <div key={j} className="w-full h-[2.5px] bg-indigo-300 rounded-[1px]"></div>
-                                                            ))}
-                                                        </div>
-                                                    ))}
-                                                    {/* 두 번째 수 십 모형 */}
-                                                    {[...Array(tens2)].map((_, i) => (
-                                                        <div key={`t2-${i}`} className="w-3.5 h-12 bg-purple-500 rounded-sm flex flex-col justify-between p-0.5 border border-purple-600 shadow-sm">
-                                                            {[...Array(10)].map((_, j) => (
-                                                                <div key={j} className="w-full h-[2.5px] bg-purple-300 rounded-[1px]"></div>
-                                                            ))}
-                                                        </div>
-                                                    ))}
-                                                    {/* 받아올림된 십 모형 */}
-                                                    {step >= 2 && carry > 0 && (
-                                                        <div className="w-3.5 h-12 bg-amber-500 rounded-sm flex flex-col justify-between p-0.5 border border-amber-600 shadow-md animate-bounce">
-                                                            {[...Array(10)].map((_, j) => (
-                                                                <div key={j} className="w-full h-[2.5px] bg-yellow-200 rounded-[1px]"></div>
-                                                            ))}
-                                                        </div>
-                                                    )}
-                                                </div>
-                                            </div>
-
-                                            {/* 일의 자리 수 모형 */}
-                                            <div className="p-1.5 flex flex-col items-center">
-                                                <span className="text-[10px] md:text-xs font-bold text-amber-400 bg-amber-500/10 px-2.5 py-0.5 rounded-full mb-2">일의 자리 ({step >= 2 ? displayOnes : sumOnes})</span>
-                                                <div className="grid grid-cols-4 gap-1.5 justify-items-center">
-                                                    {step < 2 ? (
-                                                        [...Array(ones1)].map((_, i) => (
-                                                            <div key={`o1-${i}`} className="w-3.5 h-3.5 bg-yellow-400 rounded-sm border border-yellow-500 shadow-sm"></div>
-                                                        ))
-                                                    ) : (
-                                                        [...Array(displayOnes)].map((_, i) => (
-                                                            <div key={`o1-rem-${i}`} className="w-3.5 h-3.5 bg-yellow-400 rounded-sm border border-yellow-500 shadow-sm"></div>
-                                                        ))
-                                                    )}
-                                                    
-                                                    {step < 2 && [...Array(ones2)].map((_, i) => (
-                                                        <div key={`o2-${i}`} className="w-3.5 h-3.5 bg-orange-400 rounded-sm border border-orange-500 shadow-sm"></div>
-                                                    ))}
-                                                </div>
-                                                {step === 1 && sumOnes >= 10 && (
-                                                    <div className="mt-auto w-full text-center bg-rose-500/10 text-[9px] text-rose-400 font-bold p-1 rounded-md border border-rose-500/20 animate-pulse">
-                                                        ⚠️ 10개 이상 변신 대기!
-                                                    </div>
-                                                )}
-                                            </div>
-
-                                        </div>
-                                    </div>
-                                    <p className="text-[10px] text-slate-500 text-center mt-3">🟦 십 모형 (10) | 🟨 일 모형 (1)</p>
+                                {/* 갈색 받아올림 기둥 배경: 2열(십의 자리) 위치에만 완벽히 매핑 (left 값 정밀 조정) */}
+                                <div className="absolute top-4 bottom-4 left-[4.2rem] w-14 bg-amber-950/40 border border-amber-900/30 rounded-full pointer-events-none z-0 flex flex-col justify-between items-center py-10 text-amber-500/30 text-xs font-sans font-bold">
+                                    <div>받</div><div>아</div><div>올</div><div>림</div>
                                 </div>
 
-                                {/* 2. 정렬 세로셈 판서 보드 */}
-                                <div className="bg-slate-950 rounded-2xl p-5 border border-slate-800 flex flex-col justify-between shadow-lg">
-                                    <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider">
-                                        🔢 세로셈 실시간 판서
-                                    </h4>
+                                <div className="grid grid-cols-[2rem_3rem_0.5rem_3rem] items-center justify-items-center gap-y-3 w-full z-10 pr-1">
+                                    
+                                    {/* 0행: 받아올림 숫자 1 */}
+                                    <div></div>
+                                    <div className="h-8 flex items-center justify-center">
+                                        {step >= 2 && carry === 1 && (
+                                            <span id="carry-indicator" className="text-xl font-bold bg-amber-500 text-slate-950 w-7 h-7 rounded-full flex items-center justify-center border border-amber-300 shadow animate-bounce">
+                                                1
+                                            </span>
+                                        )}
+                                    </div>
+                                    <div></div>
+                                    <div></div>
 
-                                    {/* 정밀 세로셈 격자 배치 */}
-                                    <div className="font-mono-custom text-4xl md:text-5xl font-black my-4 mx-auto flex justify-center">
-                                        <div className="grid grid-cols-[2.5rem_3.5rem_3.5rem] gap-y-3 text-center items-center w-40 relative">
-                                            {/* 받아올림행: 십의 자리 위에 정확하게 정렬 */}
-                                            <div></div>
-                                            <div className="flex justify-center h-8">
-                                                {step >= 2 && carry > 0 ? (
-                                                    <span className="text-amber-400 border border-amber-500/50 bg-amber-500/10 rounded-full w-8 h-8 flex items-center justify-center text-xs font-sans font-bold animate-bounce">
-                                                        1
-                                                    </span>
-                                                ) : (
-                                                    <div className="h-8"></div>
-                                                )}
-                                            </div>
-                                            <div className="h-8"></div>
+                                    {/* 1행: 첫 번째 수의 십의 자리 / 일의 자리 */}
+                                    <div></div>
+                                    <div className="text-indigo-400">{tens1}</div>
+                                    <div></div>
+                                    <div className="text-yellow-400">{ones1}</div>
 
-                                            {/* 첫 번째 수 행 */}
-                                            <div></div>
-                                            <div className="text-indigo-400">{tens1}</div>
-                                            <div className="text-yellow-400">{ones1}</div>
+                                    {/* 2행: 초록색 덧셈 기호(+) 및 두 번째 수 */}
+                                    {/* 수정 내용: 1열인 부호 전용 칸에 배치하여 2열인 숫자 1의 왼쪽으로 완벽 분리 */}
+                                    <div className="text-emerald-400 text-4xl font-sans font-bold w-full text-left pl-1 select-none flex items-center justify-start group">+</div>
+                                    <div className="text-indigo-400">{tens2}</div>
+                                    <div></div>
+                                    <div className="text-yellow-400">{ones2}</div>
 
-                                            {/* 두 번째 수 행: 덧셈 기호가 더하는 수 바로 앞에 더 크게 배치 */}
-                                            <div className="text-emerald-500 text-5xl font-black justify-self-center pr-1">+</div>
-                                            <div className="text-indigo-400">{tens2}</div>
-                                            <div className="text-yellow-400">{ones2}</div>
+                                    {/* 3행: 세로셈 마감 경계선 */}
+                                    <div className="col-span-4 w-full border-b-4 border-slate-700 my-1"></div>
 
-                                            {/* 줄 맞춤 밑줄 */}
-                                            <div className="col-span-3 border-b-4 border-slate-700 my-1"></div>
-
-                                            {/* 결과 행 */}
-                                            <div></div>
-                                            <div className={`text-indigo-400 transition-all duration-300 ${step >= 3 ? 'opacity-100 scale-105' : 'opacity-0'}`}>
-                                                {sumTens}
-                                            </div>
-                                            <div className={`text-yellow-400 transition-all duration-300 ${step >= 1 ? 'opacity-100 scale-105' : 'opacity-0'}`}>
-                                                {step >= 2 ? displayOnes : sumOnes}
-                                            </div>
-                                        </div>
+                                    {/* 4행: 최종 연산 결과 행 */}
+                                    <div></div>
+                                    <div className="h-12 flex items-center justify-center">
+                                        {step === 3 ? (
+                                            <span className="text-indigo-400 font-extrabold">{sumTens}</span>
+                                        ) : (
+                                            <span className="text-slate-800 text-3xl">.</span>
+                                        )}
+                                    </div>
+                                    <div></div>
+                                    <div className="h-12 flex items-center justify-center">
+                                        {step >= 1 ? (
+                                            <span className="text-yellow-400">{displayOnes}</span>
+                                        ) : (
+                                            <span className="text-slate-800 text-3xl">.</span>
+                                        )}
                                     </div>
 
-                                    {/* 캡션 안내 텍스트 */}
-                                    <div className="bg-slate-900 p-2.5 rounded-lg text-xs text-slate-300 text-center border border-slate-800">
-                                        {step === 0 && "⬇️ 아래 단계별 버튼을 차례대로 눌러보세요!"}
-                                        {step === 1 && `일의 자리 합은 ${sumOnes}! 10개가 넘었네요.`}
-                                        {step === 2 && `10은 십의 자리로 받아올림되어 올라가요!`}
-                                        {step === 3 && `십의 자리를 모두 더해 정답은 ${num1+num2}!`}
-                                    </div>
-
-                                </div>
-
-                            </div>
-
-                            {/* 3. 단계별 제어반 */}
-                            <div className="bg-slate-950/80 p-3 rounded-2xl border border-slate-800/80 shadow-md">
-                                <h4 className="text-[10px] font-bold text-indigo-400 uppercase tracking-wider mb-2 text-center">
-                                    🕹️ 세로셈 원리 단계별 재생기
-                                </h4>
-                                <div className="grid grid-cols-4 gap-1.5">
-                                    {[
-                                        { s: 0, label: '0. 준비' },
-                                        { s: 1, label: '1. 일의 자리' },
-                                        { s: 2, label: '2. 받아올림' },
-                                        { s: 3, label: '3. 십의 자리' }
-                                    ].map((btn) => (
-                                        <button
-                                            key={btn.s}
-                                            onClick={() => setStep(btn.s)}
-                                            className={`py-2.5 rounded-xl text-xs font-bold transition-all ${
-                                                step === btn.s 
-                                                    ? 'bg-indigo-600 text-white shadow-md shadow-indigo-600/20' 
-                                                    : 'bg-slate-900 text-slate-400 hover:bg-slate-800'
-                                            }`}
-                                        >
-                                            {btn.label}
-                                        </button>
-                                    ))}
                                 </div>
                             </div>
 
+                            {/* 실시간 단계 설명 텍스트 배너 */}
+                            <div className="w-full bg-slate-950 border border-slate-900 rounded-xl py-2.5 px-4 text-center text-xs font-medium text-slate-300 mt-4 min-h-[40px] flex items-center justify-center">
+                                {step === 0 && "0단계: 자릿수를 맞춰 숫자를 예쁘게 적어줍니다."}
+                                {step === 1 && `1단계: 일의 자리 ${ones1}+${ones2}=${sumOnes}이므로 밑에 ${displayOnes}을 적어요.`}
+                                {step === 2 && "2단계: 일의 자리에서 넘친 10은 십의 자리 위로 '1'이 되어 이사 가요!"}
+                                {step === 3 && `3단계: 받아올림된 1과 십의 자리 숫자를 모두 더해 ${sumTens}을 적으면 완성!`}
+                            </div>
                         </div>
-
                     </main>
 
-                    {/* 3. 하단 포스터 설명문구 */}
-                    <footer className="mt-4 mb-2 pt-3 border-t border-slate-800/80 text-center text-[10px] text-slate-500">
-                        <p>※ 본 교구재 포스터는 수 모형 조작 활동과 세로셈 알고리즘을 연결하는 원리 시각화 교재입니다. | © 🎒 수꺾마 프로젝트</p>
-                    </footer>
+                    {/* 하단 단원 원리 재생기 컨트롤러 바 */}
+                    <div className="w-full max-w-5xl bg-slate-900/60 border border-slate-800 rounded-2xl p-4 flex flex-col items-center gap-3">
+                        <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">🧬 단원 원리 단계별 재생기</span>
+                        <div className="grid grid-cols-4 gap-2 w-full max-w-xl">
+                            {[
+                                { id: 0, label: '0. 준비' },
+                                { id: 1, label: '1. 일의 자리' },
+                                { id: 2, label: '2. 받아올림' },
+                                { id: 3, label: '3. 십의 자리' }
+                            ].map((btn) => (
+                                <button
+                                    key={btn.id}
+                                    onClick={() => setStep(btn.id)}
+                                    className={`py-2 px-1 text-xs font-bold rounded-xl transition-all cursor-pointer ${step === btn.id ? 'bg-indigo-600 text-white shadow-md shadow-indigo-600/30' : 'bg-slate-950 text-slate-400 hover:bg-slate-800 border border-slate-900'}`}
+                                >
+                                    {btn.label}
+                                </button>
+                            ))}
+                        </div>
+                    </div>
+
+                    {/* 수 변경 테스트용 프리셋 링크 */}
+                    <div className="flex gap-2 mt-2">
+                        {presets.map((p, idx) => (
+                            <button
+                                key={idx}
+                                onClick={() => { setNum1(p.n1); setNum2(p.n2); setStep(0); }}
+                                className="text-[10px] bg-slate-900 border border-slate-800 hover:bg-slate-800 text-slate-400 px-3 py-1 rounded-md transition-all cursor-pointer"
+                            >
+                                {p.label}
+                            </button>
+                        ))}
+                    </div>
 
                 </div>
             );
         }
 
-        // React 18 Root 활성화 및 렌더링
         const root = ReactDOM.createRoot(document.getElementById('root'));
         root.render(<App />);
     </script>
